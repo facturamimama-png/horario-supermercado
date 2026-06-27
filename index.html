@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Horario · Supermercado</title>
+<meta name="description" content="Horario de apertura del supermercado: todos los días de 8:00 a 20:30.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,500;0,600;0,700;0,800;1,500&family=Raleway:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:    #FCFAF5;
+    --yellow:   #FEE3A2;
+    --peach:    #F9D4B9;
+    --sage:     #B0C9BC;
+    --mint:     #D9E5E3;
+    --sky:      #B0CCDB;
+    --blue:     #91BCD4;
+    --slate-b:  #6C93A7;
+    --gray:     #D0D1D2;
+    --charcoal: #52575A;
+    --ink:      #212929;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html, body{
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+
+  body{
+    font-family: 'Raleway', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Franja decorativa de fondo, como una "marquesina" de tienda */
+  .stripe-bg{
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background:
+      linear-gradient(180deg, var(--mint) 0%, var(--cream) 28%);
+  }
+
+  .stripe-bg::before{
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 14px;
+    background: repeating-linear-gradient(
+      -45deg,
+      var(--slate-b) 0 28px,
+      var(--blue) 28px 56px
+    );
+  }
+
+  .card{
+    width: 100%;
+    max-width: 460px;
+    background: #fff;
+    border-radius: 28px;
+    box-shadow: 0 20px 50px -20px rgba(33, 41, 41, 0.25);
+    overflow: hidden;
+    border: 1px solid var(--mint);
+  }
+
+  .card__top{
+    background: var(--sage);
+    padding: 36px 32px 28px;
+    text-align: center;
+    position: relative;
+  }
+
+  .eyebrow{
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink);
+    opacity: 0.7;
+    margin: 0 0 10px;
+  }
+
+  h1{
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: clamp(28px, 7vw, 36px);
+    line-height: 1.1;
+    margin: 0;
+    color: var(--ink);
+  }
+
+  .status{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 18px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+  }
+
+  .status .dot{
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .status.is-open{
+    background: #fff;
+    color: #2f6b4f;
+  }
+  .status.is-open .dot{
+    background: #3FA66A;
+    box-shadow: 0 0 0 4px rgba(63, 166, 106, 0.25);
+  }
+
+  .status.is-closed{
+    background: #fff;
+    color: var(--charcoal);
+  }
+  .status.is-closed .dot{
+    background: var(--charcoal);
+  }
+
+  .card__body{
+    padding: 32px 32px 36px;
+    text-align: center;
+  }
+
+  .hours{
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: clamp(40px, 11vw, 56px);
+    line-height: 1;
+    color: var(--ink);
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  .hours span{
+    color: var(--slate-b);
+  }
+
+  .days{
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--charcoal);
+    margin: 10px 0 0;
+  }
+
+  .divider{
+    height: 1px;
+    background: var(--gray);
+    margin: 28px 0;
+    border: none;
+  }
+
+  .note{
+    font-size: 14px;
+    color: var(--charcoal);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .note strong{
+    color: var(--ink);
+  }
+
+  footer{
+    text-align: center;
+    margin-top: 18px;
+    font-size: 12px;
+    color: var(--charcoal);
+    opacity: 0.75;
+  }
+
+  @media (max-width: 380px){
+    .card__top{ padding: 30px 22px 24px; }
+    .card__body{ padding: 26px 22px 30px; }
+  }
+
+  @media (prefers-reduced-motion: no-preference){
+    .card{
+      animation: rise 0.5s ease-out;
+    }
+    @keyframes rise{
+      from{ opacity: 0; transform: translateY(12px); }
+      to{ opacity: 1; transform: translateY(0); }
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- <div class="stripe-bg"></div> -->
+
+<main class="card">
+  <div class="card__top">
+    <p class="eyebrow">Horario de apertura</p>
+    <!-- <h1>Te esperamos</h1> -->
+    <span id="status" class="status"></span>
+  </div>
+
+  <div class="card__body">
+    <p class="hours">8:00 <span>—</span> 20:30</p>
+    <p class="days">Abierto todos los días.</p>
+
+    <hr class="divider">
+
+    <p class="note">
+      Abrimos <strong>todos los días del año</strong>, incluidos festivos.
+    </p>
+  </div>
+</main>
+
+
+<script>
+  // Calcula si está abierto ahora según el horario 8:00–20:30, todos los días
+  function actualizarEstado(){
+    const el = document.getElementById('status');
+    const ahora = new Date();
+    const minutos = ahora.getHours() * 60 + ahora.getMinutes();
+    const abre = 8 * 60;        // 8:00
+    const cierra = 20 * 60 + 30; // 20:30
+
+    const abierto = minutos >= abre && minutos < cierra;
+
+    if(abierto){
+      el.className = 'status is-open';
+      el.innerHTML = '<span class="dot"></span> Abierto ahora';
+    } else {
+      el.className = 'status is-closed';
+      el.innerHTML = '<span class="dot"></span> Cerrado ahora';
+    }
+  }
+
+  actualizarEstado();
+  setInterval(actualizarEstado, 60000);
+</script>
+
+</body>
+</html>
